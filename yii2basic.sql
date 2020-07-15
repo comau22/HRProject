@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-07-2020 a las 22:42:38
+-- Tiempo de generación: 15-07-2020 a las 23:47:02
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -39,18 +39,70 @@ CREATE TABLE `alumnos` (
   `sexo` varchar(20) NOT NULL,
   `rfc` varchar(13) NOT NULL,
   `status` varchar(20) NOT NULL,
-  `id_grupo` int(4) NOT NULL,
-  `promedio` decimal(2,0) NOT NULL
+  `promedio` decimal(2,0) NOT NULL,
+  `id_grupo` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `alumnos`
 --
 
-INSERT INTO `alumnos` (`idAlumno`, `nombre`, `aPaterno`, `aMaterno`, `dia_nac`, `mes_nac`, `ano_nac`, `sexo`, `rfc`, `status`, `id_grupo`, `promedio`) VALUES
-(1, 'mauricio ', 'villanueva', 'olarra', 0, 0, 0, '', '', '', 0, '9'),
-(2, 'dario', 'rodriguez', 'villanueva', 0, 0, 0, '', '', '', 0, '7'),
-(3, 'marisa ', 'villanueva', 'corona', 0, 0, 0, '', '', '', 0, '7');
+INSERT INTO `alumnos` (`idAlumno`, `nombre`, `aPaterno`, `aMaterno`, `dia_nac`, `mes_nac`, `ano_nac`, `sexo`, `rfc`, `status`, `promedio`, `id_grupo`) VALUES
+(1, 'mauricio ', 'villanueva', 'olarra', 0, 0, 0, '', '', '', '9', 1),
+(2, 'dario', 'rodriguez', 'villanueva', 0, 0, 0, '', '', '', '7', 1),
+(3, 'marisa ', 'villanueva', 'corona', 0, 0, 0, '', '', '', '7', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asignatura`
+--
+
+CREATE TABLE `asignatura` (
+  `id_asignatura` int(4) NOT NULL,
+  `nombre` varchar(20) NOT NULL,
+  `id_Docente` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `asignatura`
+--
+
+INSERT INTO `asignatura` (`id_asignatura`, `nombre`, `id_Docente`) VALUES
+(1, 'computacion', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asignatura_alumno`
+--
+
+CREATE TABLE `asignatura_alumno` (
+  `id_asignatura_alumno` int(4) NOT NULL,
+  `id_asignatura` int(4) NOT NULL,
+  `id_alumno` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `calificacion`
+--
+
+CREATE TABLE `calificacion` (
+  `id_calificacion` int(3) NOT NULL,
+  `calificacion` int(2) NOT NULL,
+  `no_parcial` int(2) NOT NULL,
+  `id_asignatura` int(4) NOT NULL,
+  `id_alumno` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `calificacion`
+--
+
+INSERT INTO `calificacion` (`id_calificacion`, `calificacion`, `no_parcial`, `id_asignatura`, `id_alumno`) VALUES
+(1, 10, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -139,6 +191,13 @@ CREATE TABLE `docentes` (
   `id_Materia` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `docentes`
+--
+
+INSERT INTO `docentes` (`id_Docente`, `nombre`, `aPaterno`, `aMaterno`, `dia_nac`, `mes_nac`, `ano_nac`, `sexo`, `rfc`, `status`, `calle`, `num_calle`, `colonia`, `cp`, `id_Materia`) VALUES
+(1, 'asdf', 'asdf', 'asdf', 1, 12, 1996, 'masculino', 'asdfhy', 'solkij', 'asdfv', 123, 'sdfdsa', 34000, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -162,6 +221,13 @@ CREATE TABLE `grupos` (
   `salon` varchar(20) NOT NULL,
   `turno` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `grupos`
+--
+
+INSERT INTO `grupos` (`id_grupo`, `id parcial`, `salon`, `turno`) VALUES
+(1, 1, '334', 'matutino ');
 
 -- --------------------------------------------------------
 
@@ -202,7 +268,30 @@ INSERT INTO `personal` (`idPersona`, `nombre`, `aPaterno`, `aMaterno`, `dia_nac`
 --
 ALTER TABLE `alumnos`
   ADD PRIMARY KEY (`idAlumno`),
-  ADD KEY `grupo` (`id_grupo`);
+  ADD KEY `id_grupo` (`id_grupo`);
+
+--
+-- Indices de la tabla `asignatura`
+--
+ALTER TABLE `asignatura`
+  ADD PRIMARY KEY (`id_asignatura`),
+  ADD KEY `id_Docente` (`id_Docente`);
+
+--
+-- Indices de la tabla `asignatura_alumno`
+--
+ALTER TABLE `asignatura_alumno`
+  ADD PRIMARY KEY (`id_asignatura_alumno`),
+  ADD KEY `asignatura_alumno_ibfk_1` (`id_alumno`),
+  ADD KEY `id_asignatura` (`id_asignatura`);
+
+--
+-- Indices de la tabla `calificacion`
+--
+ALTER TABLE `calificacion`
+  ADD PRIMARY KEY (`id_calificacion`),
+  ADD KEY `id_alumno` (`id_alumno`),
+  ADD KEY `id_asignatura` (`id_asignatura`);
 
 --
 -- Indices de la tabla `campus`
@@ -261,6 +350,24 @@ ALTER TABLE `alumnos`
   MODIFY `idAlumno` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `asignatura`
+--
+ALTER TABLE `asignatura`
+  MODIFY `id_asignatura` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `asignatura_alumno`
+--
+ALTER TABLE `asignatura_alumno`
+  MODIFY `id_asignatura_alumno` int(4) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `calificacion`
+--
+ALTER TABLE `calificacion`
+  MODIFY `id_calificacion` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `campus`
 --
 ALTER TABLE `campus`
@@ -282,7 +389,7 @@ ALTER TABLE `departamentos`
 -- AUTO_INCREMENT de la tabla `docentes`
 --
 ALTER TABLE `docentes`
-  MODIFY `id_Docente` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_Docente` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `formato`
@@ -294,7 +401,7 @@ ALTER TABLE `formato`
 -- AUTO_INCREMENT de la tabla `grupos`
 --
 ALTER TABLE `grupos`
-  MODIFY `id_grupo` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_grupo` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `personal`
@@ -305,6 +412,32 @@ ALTER TABLE `personal`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `alumnos`
+--
+ALTER TABLE `alumnos`
+  ADD CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`);
+
+--
+-- Filtros para la tabla `asignatura`
+--
+ALTER TABLE `asignatura`
+  ADD CONSTRAINT `asignatura_ibfk_1` FOREIGN KEY (`id_Docente`) REFERENCES `docentes` (`id_Docente`);
+
+--
+-- Filtros para la tabla `asignatura_alumno`
+--
+ALTER TABLE `asignatura_alumno`
+  ADD CONSTRAINT `asignatura_alumno_ibfk_1` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`idAlumno`),
+  ADD CONSTRAINT `asignatura_alumno_ibfk_2` FOREIGN KEY (`id_asignatura`) REFERENCES `asignatura` (`id_asignatura`);
+
+--
+-- Filtros para la tabla `calificacion`
+--
+ALTER TABLE `calificacion`
+  ADD CONSTRAINT `calificacion_ibfk_1` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`idAlumno`),
+  ADD CONSTRAINT `calificacion_ibfk_2` FOREIGN KEY (`id_asignatura`) REFERENCES `asignatura` (`id_asignatura`);
 
 --
 -- Filtros para la tabla `carrera`
