@@ -22,6 +22,8 @@ use Yii;
  * @property string $colonia
  * @property int $cp
  * @property int $id_Materia
+ *
+ * @property Asignatura[] $asignaturas
  */
 class Docentes extends \yii\db\ActiveRecord
 {
@@ -69,5 +71,15 @@ class Docentes extends \yii\db\ActiveRecord
             'cp' => 'Cp',
             'id_Materia' => 'Id Materia',
         ];
+    }
+
+    /**
+     * Gets query for [[Asignaturas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAsignaturas()
+    {
+        return $this->hasMany(Asignatura::className(), ['id_Docente' => 'id_Docente']);
     }
 }
